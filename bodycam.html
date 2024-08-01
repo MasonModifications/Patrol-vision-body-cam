@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bodycam UI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+        #bodycam {
+            position: absolute;
+            top: 50px; /* Adjusted position */
+            right: 10px;
+            background: rgba(50, 50, 50, 0.8); /* Darker semi-transparent gray */
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            text-align: left;
+            border: 2px solid black;
+            z-index: 9999;
+            width: 220px;
+        }
+        #bodycam img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        #bodycam #logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        #info {
+            margin-left: 10px;
+        }
+        #info p {
+            margin: 0;
+            font-size: 14px;
+            color: white;
+        }
+        .recording-indicator {
+            width: 12px;
+            height: 12px;
+            background-color: red;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="bodycam">
+        <div class="recording-indicator"></div>
+        <img id="logo" src="logo.png" alt="Bodycam Logo">
+        <div id="info">
+            <p>Name: <span id="name">John Doe</span></p>
+            <p>Call Sign: <span id="callsign">1234</span></p>
+            <p>Department: <span id="department">Police Department</span></p>
+        </div>
+    </div>
+    <audio id="bodycamSound" src="bodycam_on.wav"></audio>
+
+    <script>
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'toggleBodycam') {
+                const bodycam = document.getElementById('bodycam');
+                if (event.data.active) {
+                    bodycam.style.display = 'block';
+                    document.getElementById('bodycamSound').play();
+                } else {
+                    bodycam.style.display = 'none';
+                }
+            } else if (event.data.type === 'updateInfo') {
+                if (event.data.name !== undefined) {
+                    document.getElementById('name').innerText = event.data.name;
+                }
+                if (event.data.callsign !== undefined) {
+                    document.getElementById('callsign').innerText = event.data.callsign;
+                }
+                if (event.data.department !== undefined) {
+                    document.getElementById('department').innerText = event.data.department;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
